@@ -1,5 +1,6 @@
 package edu.mfvp.credit.application.system.excepions
 
+import org.springframework.dao.DataAccessException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.FieldError
@@ -28,6 +29,19 @@ class RestExceptionHandler {
                 exception = e.javaClass.toString(),
                 details = erros),
             HttpStatus.BAD_REQUEST
+        )
+    }
+
+    @ExceptionHandler(DataAccessException::class)
+    fun handlerValidException(e: DataAccessException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(title = "Bad Request - consult the documentation",
+                timestamp = LocalDateTime.now(),
+                status = HttpStatus.CONFLICT.value(),
+                exception = e.javaClass.toString(),
+                details = mutableMapOf(e.cause.toString() to e.message)
+            ),
+            HttpStatus.CONFLICT
         )
     }
 
