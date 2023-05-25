@@ -45,4 +45,30 @@ class RestExceptionHandler {
         )
     }
 
+    @ExceptionHandler(BusinessException::class)
+    fun handlerValidException(e: BusinessException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(title = "Bad Request - consult the documentation",
+                timestamp = LocalDateTime.now(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                exception = e.javaClass.toString(),
+                details = mutableMapOf(e.cause.toString() to e.message)
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+    }
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handlerValidException(e: IllegalArgumentException): ResponseEntity<ExceptionDetails> {
+        return ResponseEntity(
+            ExceptionDetails(title = "Bad Request - consult the documentation",
+                timestamp = LocalDateTime.now(),
+                status = HttpStatus.BAD_REQUEST.value(),
+                exception = e.javaClass.toString(),
+                details = mutableMapOf(e.cause.toString() to e.message)
+            ),
+            HttpStatus.BAD_REQUEST
+        )
+    }
+
 }
