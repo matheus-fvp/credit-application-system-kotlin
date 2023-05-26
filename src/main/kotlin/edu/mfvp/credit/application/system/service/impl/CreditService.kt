@@ -5,6 +5,7 @@ import edu.mfvp.credit.application.system.excepions.BusinessException
 import edu.mfvp.credit.application.system.repository.CreditRepository
 import edu.mfvp.credit.application.system.service.ICreditService
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.util.*
 
 @Service
@@ -16,6 +17,10 @@ class CreditService(
         credit.apply {
             customer = custumerService.findById(credit.customer?.id!!)
         }
+        val now: LocalDate = LocalDate.now()
+        val dateOfFistInstallment = credit.dayFirstInstallment
+        if(dateOfFistInstallment.isAfter(now.plusMonths(3)))
+            throw BusinessException("The month of first installment must be maximum three month after the now day")
         return creditRepository.save(credit)
     }
 
